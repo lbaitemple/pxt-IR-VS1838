@@ -75,18 +75,18 @@ namespace irVS1838 {
     }
   }
 
-  function enableIrMarkSpaceDetection(pin: DigitalPin) {
-    pins.setPull(pin, PinPullMode.PullNone);
+  function enableIrMarkSpaceDetection(pin: DigitalInOutPin) {
+    pin.setPull(PinPullMode.PullNone);
 
     let mark = 0;
     let space = 0;
 
-    pins.onPulsed(pin, PulseValue.Low, () => {
+    pin.onPulsed(PulseValue.Low, () => {
       // HIGH, see https://github.com/microsoft/pxt-microbit/issues/1416
       mark = pins.pulseDuration();
     });
 
-    pins.onPulsed(pin, PulseValue.High, () => {
+    pin.onPulsed(PulseValue.High, () => {
       // LOW
       space = pins.pulseDuration();
       const status = decode(mark + space);
@@ -109,7 +109,7 @@ namespace irVS1838 {
   //% pin.fieldOptions.tooltips=0
   //% weight=90
   export function connectIrReceiver(
-    pin: DigitalPin,
+    pin: DigitalInOutPin,
   ): void {
     if (irState) {
       return;
@@ -199,55 +199,10 @@ namespace irVS1838 {
   //% pin.fieldOptions.tooltips=0
   //% weight=89
   export function connectIrReceiverVisual(
-    pin: DigitalPin,
+    pin: DigitalInOutPin,
   ): void {
     irVS1838.connectIrReceiver(pin)
-    irVS1838.connectIrReceiver(DigitalPin.P0)
-    basic.showLeds(`
-        . . . . .
-        . . . . .
-        . . . . .
-        . . . . .
-        # . . . .
-        `)
-    basic.showLeds(`
-        . . . . .
-        . . . . .
-        # # . . .
-        . . # . .
-        # . # . .
-        `)
-    basic.showLeds(`
-        # # # . .
-        . . . # .
-        # # . . #
-        . . # . #
-        # . # . #
-        `)
-    basic.showNumber(8)
-    basic.showLeds(`
-        # # # . .
-        . . . # .
-        # # . . #
-        . . # . #
-        # . # . #
-        `)
-    basic.showLeds(`
-        . . . . .
-        . . . . .
-        # # . . .
-        . . # . .
-        # . # . .
-        `)
-    basic.showLeds(`
-        . . . . .
-        . . . . .
-        . . . . .
-        . . . . .
-        # . . . .
-        `)
-
-    basic.clearScreen()
+    irVS1838.connectIrReceiver(DigitalInOutPin.P0);
   }
  
   // *************************************************** [GROUP] Datagram ****************************************** //
